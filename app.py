@@ -1,5 +1,5 @@
 import streamlit as st
-from langchain.agents import create_csv_agent
+from langchain.agents import create_csv_agent, create_pandas_dataframe_agent
 from langchain.llms import OpenAI
 from langchain.agents import AgentType
 from langchain.chat_models import ChatOpenAI
@@ -17,16 +17,18 @@ def main():
     st.write(csv_upload)
     
     
+    
 
     if csv_upload:
             # stringio = StringIO(csv_upload.getvalue().decode("utf-8"))
             question  = st.text_input("What would you like to know about:")
             llm = ChatOpenAI(temperature=0)
             agent = create_csv_agent(
-            llm, csv_file = csv_upload, agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)  # Pass file name to function
+            llm=llm, path=csv_upload.name, agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)  # Pass file name to function
 
             if csv_upload is not None and question != "":
-                agent.run(question)
+                answer = agent.run(question)
+                st.write(answer)
         
 
 
